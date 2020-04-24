@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			$('.auth').show();
 			$('.unauth').hide();
 			user.getIdTokenResult().then(token => {
-				if (user.authorized) {
+				if (token.claims.authorized) {
 					// If authorized forward to /system
 					location.href = '/system.html';
 				} else {
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	
 	// Logout handler
-	$('#logout-btn').on('click', (event) => {
+	$('#logout-btn').on('click', () => {
 		firebase.auth().signOut()
 			.then(() => {
 				const notification = $('#form-notifications');
