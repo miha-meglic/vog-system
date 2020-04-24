@@ -3,13 +3,14 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Vog Sistem - Prijava</title>
+	<title>Vog Sistem</title>
 	<link rel="shortcut icon" type="image/jpg" href="img/Logo.svg"/>
 	
 	<!-- Firebase Initialization -->
 	<script defer src="/__/firebase/7.14.2/firebase-app.js"></script>
 	<script defer src="/__/firebase/7.14.2/firebase-auth.js"></script>
 	<script defer src="/__/firebase/7.14.2/firebase-firestore.js"></script>
+	<script defer src="/__/firebase/7.14.2/firebase-functions.js"></script>
 	<script defer src="/__/firebase/init.js"></script>
 	
 	<!-- Bootstrap -->
@@ -21,8 +22,31 @@
 			integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
 			integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<!-- Bootstrap Theme -->
+	<link rel="stylesheet" href="https://bootstrap.themes.guide/greyson/theme.css">
 </head>
 <body>
-
+	<!-- Navbar -->
+	<nav class="navbar fixed-top navbar-expand navbar-dark bg-primary">
+		<a class="navbar-brand" href="">
+			<img src="img/favicon.svg" height="33" class="d-inline-block align-top" alt="Vog Sistem">
+		</a>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link">Dodaj vnos</a></li>
+			</ul>
+			<span class="navbar-text ml-auto py-0" style="display: flex; flex-direction: row;">
+				<span class="mr-auto">
+					<button class="btn btn-outline-light my-2 my-sm-0 auth" style="display: none;" id="btnOdjava">Odjava</button>
+				</span>
+				<span class=" pl-3" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+					<div class="d-none d-md-inline-block auth" style="display: none;" id="userName"></div>
+					<div class="d-none d-md-inline-block auth" style="display: none; font-size: 0.6rem;" id="userEmail"></div>
+				</span>
+			</span>
+		</div>
+	</nav>
+	
+	<script src="script/system.js"></script>
 </body>
 </html>
