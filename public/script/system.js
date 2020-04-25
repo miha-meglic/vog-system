@@ -1,3 +1,12 @@
+const buttons = `
+<div class="table-button btn-primary pointer" onclick="handleEditId({id})" title="Uredi">
+	<i class="fas fa-edit" aria-hidden="true"></i>
+</div>
+<div class="table-button btn-danger pointer" onclick="handleDeleteId({id})" title="Odstrani">
+	<i class="fas fa-trash" aria-hidden="true"></i>
+</div>
+`;
+
 document.addEventListener('DOMContentLoaded', () => {
 	// Check if user is logged in and authorized
 	firebase.auth().onAuthStateChanged(user => {
@@ -26,6 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	const inventoryRef = firebase.firestore().collection('Inventory');
 	
 	const datatable = new FirestoreDatatable('inventoryTable', inventoryRef,
-		['Name', 'Location', 'Amount']);
+		['Name', 'Location', 'Amount', 'custom_buttons']);
+	datatable.setCustomFiled('buttons', (data) => buttons);
+	
 	datatable.reload();
 });
+
+window.handleEditId = (docId) => {
+
+};
+
+window.handleDeleteId = (docId) => {
+
+};
