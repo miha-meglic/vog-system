@@ -1,0 +1,20 @@
+.table-shadow {
+	box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+}
+
+.table-shadow tbody tr {
+	font-weight: lighter;
+}
+
+.table-shadow tbody th {
+	font-weight: normal;
+}
+
+.table-nowrap {
+	white-space: nowrap;
+}
+
+.table-slim-rows tr th, .table-slim-rows tr td {
+	padding-top: .2rem;
+	padding-bottom: .2rem;
+}

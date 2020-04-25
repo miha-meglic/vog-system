@@ -22,4 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	$('#btnOdjava').on('click', () => {
 		firebase.auth().signOut();
 	});
+	
+	const inventoryRef = firebase.firestore().collection('Inventory');
+	
+	const datatable = new FirestoreDatatable('inventoryTable', inventoryRef,
+		['Name', 'Location', 'Amount']);
+	datatable.reload();
 });
