@@ -44,6 +44,29 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Handlers
 	// Clear modal on close
 	$('.modal [aria-label="Close"]').on('click', (event) => clearModal(event.target.closest('.modal')));
+	// Write changes on add/edit submit
+	$('#entry-form').on('submit', (event) => {
+		event.preventDefault();
+		const form = event.target;
+		const modal = $(form).closest('.modal');
+		const title = modal.find('.modal-title');
+		
+		// Get data
+		let docId;
+		if (title.text() === 'Uredi Vpis')
+			docId = title.data('id');
+		const name = form['entry-name'].value;
+		const location = form['entry-location'].value;
+		const amount = form['entry-amount'].value;
+		
+		// Add/update item
+		addItem(docId, name, location, amount).then(() => {
+			// Reset and hide form, reload datatable
+			modal.modal('hide');
+			form.reset();
+			datatable.reload();
+		});
+	});
 	// Delete item on confirm
 	$('#confirm-remove').on('click', (event) => {
 		const itemId = event.target.dataset.value;
@@ -53,13 +76,31 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 });
 
+// Add entry to Firestore
+function addItem (docId, name, location, amount) {
+	let dbRef = firebase.firestore().collection('Inventory');
+	const entry = {
+		Name: name,
+		Location: location,
+		Amount: amount
+	};
+	
+	// If docId exists, update entry
+	if (docId)
+		return dbRef.doc(docId).set(entry, {merge: true});
+	else
+		return dbRef.add(entry);
+}
+
 // Clears modal form and handles title
 function clearModal (modal) {
 	$(modal).find('form').trigger('reset');
 	
 	const title = $(modal).find('.modal-title');
-	if (title.text() === 'Uredi Vpis')
+	if (title.text() === 'Uredi Vpis') {
 		title.text('Nov Vpis');
+		title.removeData('id');
+	}
 }
 
 // Modify and populate add form on edit
@@ -70,7 +111,9 @@ window.handleEditId = (docId) => {
 	docRef.get().then(snap => {
 		const data = snap.data();
 		
-		modal.children('.modal-title').text('Uredi Vpis');
+		// Change modal title and add id attribute
+		modal.find('.modal-title').text('Uredi Vpis');
+		modal.find('.modal-title').data('id', docId);
 		$('#entry-name').val(data['Name']);
 		$('#entry-location').val(data['Location']);
 		$('#entry-amount').val(data['Amount']);
