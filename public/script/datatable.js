@@ -40,7 +40,7 @@ class FirestoreDatatable {
 	 * Set custom field contents
 	 *
 	 * @param {string} name - field name (name after custom_ in fields array)
-	 * @param {callback} callback - field implementation
+	 * @param {function(*, *=): string} callback - field implementation
 	 */
 	setCustomFiled (name, callback) {
 		this.customFields[name] = callback;
@@ -102,8 +102,9 @@ class FirestoreDatatable {
 	 * Add row to datatable
 	 *
 	 * @param {Object} data - Firebase document
+	 * @param {string} id - Firebase document id
 	 */
-	addRow (data) {
+	addRow (data, id) {
 		let row = document.createElement('tr');
 		
 		this.fields.forEach((item, index) => {
@@ -115,9 +116,9 @@ class FirestoreDatatable {
 			
 			if (item.startsWith('custom')) {
 				let customKey = item.slice(7);
-				let ret = this.customFields[customKey](data);
+				let ret = this.customFields[customKey](data, id);
 				if (ret instanceof Promise) {
-					this.customFields[customKey](data).then(x => it.innerHTML = x.toString());
+					this.customFields[customKey](data, id).then(x => it.innerHTML = x.toString());
 				} else {
 					it.innerHTML = ret;
 				}
@@ -158,7 +159,7 @@ class FirestoreDatatable {
 					this.lastLoaded = snap.docs[snap.docs.length - 1];
 					// add documents to datatable
 					snap.docs.forEach(doc => {
-						this.addRow(doc.data());
+						this.addRow(doc.data(), doc.id);
 					});
 				});
 		}
@@ -183,7 +184,7 @@ class FirestoreDatatable {
 				this.clear();
 				// add documents to datatable
 				snap.docs.forEach(doc => {
-					this.addRow(doc.data());
+					this.addRow(doc.data(), doc.id);
 				});
 			});
 	}
