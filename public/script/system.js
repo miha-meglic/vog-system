@@ -7,6 +7,8 @@ const buttons = `
 </div>
 `;
 
+let lastBottomTrigger = Date.now();
+
 document.addEventListener('DOMContentLoaded', () => {
 	// Check if user is logged in and authorized
 	firebase.auth().onAuthStateChanged(user => {
@@ -39,7 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	const datatable = new FirestoreDatatable('inventoryTable', inventoryRef,
 		['Name', 'Location', 'Amount', 'custom_buttons']);
 	datatable.setCustomFiled('buttons', (data, id) => buttons.replace(/{id}/g, id));
-	datatable.reload();
+	reloadDatatable(datatable);
+	
+	// Infinity scroll
+	window.onscroll = function (ev) {
+		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && (Date.now() - lastBottomTrigger) > 500) {
+			lastBottomTrigger = Date.now();
+			datatable.load();
+		}
+	};
 	
 	// Handlers
 	// Clear modal on close
@@ -64,17 +74,23 @@ document.addEventListener('DOMContentLoaded', () => {
 			// Reset and hide form, reload datatable
 			modal.modal('hide');
 			form.reset();
-			datatable.reload();
+			reloadDatatable(datatable);
 		});
 	});
 	// Delete item on confirm
 	$('#confirm-remove').on('click', (event) => {
 		const itemId = $(event.target).data('value');
 		if (itemId.trim() !== '')
-			inventoryRef.doc(itemId).delete().then(() => datatable.reload());
+			inventoryRef.doc(itemId).delete().then(() => reloadDatatable(datatable));
 		$('#remove-modal').modal('hide');
 	});
 });
+
+// Reload datatable
+function reloadDatatable (datatable) {
+	lastBottomTrigger = Date.now();
+	datatable.reload();
+}
 
 // Add entry to Firestore
 function addItem (docId, name, location, amount) {
