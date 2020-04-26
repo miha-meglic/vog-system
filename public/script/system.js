@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Setup and initialize datatable
 	const datatable = new FirestoreDatatable('inventoryTable', inventoryRef,
 		['Name', 'Location', 'Amount', 'custom_buttons']);
-	datatable.setCustomFiled('buttons', (data, id) => buttons.replace('{id}', id));
+	datatable.setCustomFiled('buttons', (data, id) => buttons.replace(/{id}/g, id));
 	datatable.reload();
 	
 	// Handlers
@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	// Delete item on confirm
 	$('#confirm-remove').on('click', (event) => {
-		const itemId = event.target.dataset.value;
+		const itemId = $(event.target).data('value');
 		if (itemId.trim() !== '')
 			inventoryRef.doc(itemId).delete().then(() => datatable.reload());
-		$('#rmConfModal').modal('hide');
+		$('#remove-modal').modal('hide');
 	});
 });
 
@@ -122,8 +122,8 @@ window.handleEditId = (docId) => {
 	});
 };
 
-// Open confirm popup
+// Open confirm popup on delete
 window.handleDeleteId = (docId) => {
-	$('#remove-modal #confirm-remove').attr('data-value', docId);
+	$('#remove-modal #confirm-remove').data('value', docId);
 	$('#remove-modal').modal('show');
 };
